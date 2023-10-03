@@ -1,27 +1,34 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useContext } from 'react';
 import { Design, Configuration } from '../types.ts';
+import { NCPFConfigurationContext } from '../App.tsx';
 import classNames from 'classnames';
 
 interface Props {
   design: Design;
-  configuration: Configuration;
 }
 
 export default function DisplayDesign(props: Props) {
+  const configuration = useContext(NCPFConfigurationContext)[props.design.type];
+
+  if (!configuration) {
+    return <div>Design type "{props.design.type}" does not have a configuration!</div>;
+  }
+
   switch (props.design.type) {
     case "nuclearcraft:overhaul_sfr":
       return <DisplayOverhaulSFR {...props} />
       break;
 
     default:
-      return <div>Design type "{design.type}" not supported!</div>;
+      return <div>Design type "{props.design.type}" not supported!</div>;
       break;
   }
 }
 
-function DisplayOverhaulSFR({ design, configuration }: Props) {
+function DisplayOverhaulSFR({ design }: Props) {
   const [ imageSize, setImageSize ] = useState(16);
   const [ blur, setBlur ] = useState(false);
+  const configuration = useContext(NCPFConfigurationContext)["nuclearcraft:overhaul_sfr"];
 
   const elemRef = useRef(null);
 
