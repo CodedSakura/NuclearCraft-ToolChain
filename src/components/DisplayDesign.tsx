@@ -5,6 +5,10 @@ import classNames from 'classnames';
 
 interface Props {
   design: Design;
+  imageSize: number;
+  setImageSize: (number) => any;
+  blur: boolean;
+  setBlur: (boolean) => any;
 }
 
 export default function DisplayDesign(props: Props) {
@@ -25,11 +29,8 @@ export default function DisplayDesign(props: Props) {
   }
 }
 
-function DisplayOverhaulSFR({ design }: Props) {
-  const [ imageSize, setImageSize ] = useState(16);
-  const [ blur, setBlur ] = useState(false);
+function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, setBlur }: Props) {
   const configuration = useContext(NCPFConfigurationContext)["nuclearcraft:overhaul_sfr"];
-  const [ info, setInfo ] = useContext(BottomBarItemContext);
 
   const elemRef = useRef(null);
 
@@ -43,29 +44,6 @@ function DisplayOverhaulSFR({ design }: Props) {
       elemRef.current.removeEventListener("wheel", scrollEvent);
     }
   });
-
-  useEffect(() => {
-    if (info.some(v => v.id === "display:size")) {
-      return;
-    }
-    setInfo(i => [...i, {
-      id: "display:size",
-      side: "C",
-      render: <span key="display:size">Size: {imageSize}px</span>,
-    }]);
-    return () => {
-      setInfo(i => i.filter(v => v.id !== "display:size"));
-    }
-  }, []);
-
-
-  useEffect(() => {
-    const sizeInfo = info.find(v => v.id === "display:size");
-    if (sizeInfo) {
-      sizeInfo.render = <span key="display:size">Size: {imageSize}px</span>;
-      setInfo(info);
-    }
-  }, [ imageSize ]);
 
   const blockArray = useMemo(() => {
     const [ sx, sy, sz ] = design.dimensions;
@@ -83,8 +61,6 @@ function DisplayOverhaulSFR({ design }: Props) {
     if (e.ctrlKey) {
       e.preventDefault();
       setImageSize(s => s + Math.sign(e.wheelDelta));
-      // info.find(v => v.id === "display:size").render = imageSize;
-      setInfo([...info]);
     }
   };
 
