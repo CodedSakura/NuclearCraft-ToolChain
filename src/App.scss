@@ -56,3 +56,21 @@
   }
 }
 
+.flex {
+  &--container {
+    display: flex;
+
+    &__row {
+      flex-direction: row;
+    }
+
+    &__col {
+      flex-direction: column;
+    }
+
+    &__between {
+      justify-content: space-between;
+    }
+  }
+}
+

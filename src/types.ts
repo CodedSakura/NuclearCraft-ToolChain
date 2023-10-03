@@ -64,3 +64,12 @@ export namespace DefinedDesigns {
   }
 }
 
+
+export interface InfoSegment {
+  id: string;
+  render: any;
+  side: "L"|"C"|"R";
+  index: number;
+  onClick?: (e: any) => any;
+}
+
