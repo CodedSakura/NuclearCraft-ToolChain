@@ -1,18 +1,21 @@
-import { useState, useMemo, useRef, useEffect, useContext } from 'react';
-import { Design, Configuration } from '../types.ts';
-import { NCPFConfigurationContext, BottomBarItemContext } from '../App.tsx';
+import {Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef} from 'react';
+import {Design} from '../types.ts';
+import {NCPFConfigurationContext} from '../App.tsx';
 import classNames from 'classnames';
 
 interface Props {
   design: Design;
   imageSize: number;
-  setImageSize: (number) => any;
+  setImageSize: Dispatch<SetStateAction<number>>;
   blur: boolean;
-  setBlur: (boolean) => any;
+  setBlur: Dispatch<SetStateAction<boolean>>;
+}
+interface ExtendedProps extends Props {
+  configuration: Record<string, any>;
 }
 
 export default function DisplayDesign(props: Props) {
-  const configuration = useContext(NCPFConfigurationContext)[props.design.type];
+  const configuration = (useContext(NCPFConfigurationContext) ?? {})[props.design.type];
 
   if (!configuration) {
     return <div>Design type "{props.design.type}" does not have a configuration!</div>;
@@ -20,19 +23,15 @@ export default function DisplayDesign(props: Props) {
 
   switch (props.design.type) {
     case "nuclearcraft:overhaul_sfr":
-      return <DisplayOverhaulSFR {...props} />
-      break;
+      return <DisplayOverhaulSFR {...props} configuration={configuration} />
 
     default:
       return <div>Design type "{props.design.type}" not supported!</div>;
-      break;
   }
 }
 
-function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, setBlur }: Props) {
-  const configuration = useContext(NCPFConfigurationContext)["nuclearcraft:overhaul_sfr"];
-
-  const elemRef = useRef(null);
+function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, configuration }: ExtendedProps) {
+  const elemRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!elemRef.current) {
@@ -41,6 +40,10 @@ function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, setBlur }: 
 
     elemRef.current.addEventListener("wheel", scrollEvent, { passive: false });
     return () => {
+      if (!elemRef.current) {
+        return;
+      }
+
       elemRef.current.removeEventListener("wheel", scrollEvent);
     }
   });
@@ -57,10 +60,10 @@ function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, setBlur }: 
                 .map((_, z) => design.design[x + y * sx + z * sx * sy ])));
   }, [ design ]);
 
-  const scrollEvent = (e: any) => {
+  const scrollEvent = (e: WheelEvent) => {
     if (e.ctrlKey) {
       e.preventDefault();
-      setImageSize(s => s + Math.sign(e.wheelDelta));
+      setImageSize(s => s + Math.sign(-e.deltaY));
     }
   };
 
@@ -80,7 +83,7 @@ function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, setBlur }: 
               const block = configuration.blocks[index];
               return <img 
                     key={z} 
-                    src={"data:image/png;base64," + block.modules["plannerator:texture"].texture} 
+                    src={"data:image/png;base64," + block.modules["plannerator:texture"]["texture"]}
                     alt={block.name} 
                     width={imageSize} 
                     height={imageSize} />

@@ -35,7 +35,7 @@ export interface Design {
   modules: Modules;
   design: number[];
   [key: string]: any;
-};
+}
 
 export namespace DefinedDesigns {
   export interface UnderhaulSFR extends Design {

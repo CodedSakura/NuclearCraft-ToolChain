@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext, useMemo } from 'react';
-import { Project, Configuration, InfoSegment } from './types.ts';
+import {createContext, useEffect, useState} from 'react';
+import {Configuration, Project} from './types.ts';
 import DisplayDesign from './components/DisplayDesign.tsx';
 import './App.scss';
 
@@ -27,9 +27,9 @@ function App() {
     console.log(data);
   }, [ data ]);
 
-  const design = loading || !data ? null : data!.designs[0];
+  const design = loading || !data ? null : (data.designs ?? [])[0];
 
-  return <NCPFConfigurationContext.Provider value={loading ? null : data.configuration}>
+  return <NCPFConfigurationContext.Provider value={loading ? null : data?.configuration ?? null}>
     <div className="grid--full-width" style={{background: "#f002"}}>nav</div>
     <div style={{background: "#0f02"}}>side</div>
     { design ? <DisplayDesign {...{ design, imageSize, setImageSize, blur, setBlur }} /> : <div /> }
