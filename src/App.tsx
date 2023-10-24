@@ -2,6 +2,7 @@ import {createContext, useEffect, useState} from 'react';
 import {Configuration, Project} from './types.ts';
 import DisplayDesign from './components/DisplayDesign.tsx';
 import './App.scss';
+import SideBar from './components/SideBar.tsx';
 
 const filename = "/project.ncpf.json";
 
@@ -23,15 +24,11 @@ function App() {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [ data ]);
-
   const design = loading || !data ? null : (data.designs ?? [])[0];
 
   return <NCPFConfigurationContext.Provider value={loading ? null : data?.configuration ?? null}>
     <div className="grid--full-width" style={{background: "#f002"}}>nav</div>
-    <div style={{background: "#0f02"}}>side</div>
+    <SideBar design={design}/>
     { design ? <DisplayDesign {...{ design, imageSize, setImageSize, blur, setBlur }} /> : <div /> }
     <div style={{background: "#f0f2"}}>q</div>
     <div 

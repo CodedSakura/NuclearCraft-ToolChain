@@ -1,0 +1,21 @@
+.sidebar {
+    background: #0f02;
+    overflow: auto;
+    image-rendering: pixelated;
+    padding: 2px;
+
+    & > input {
+        padding: 2px;
+        margin-bottom: 2px;
+        outline: none;
+        border: 1px solid #888;
+        width: calc(100% - 4px - 4px);
+    }
+
+    & > div {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 32px);
+        line-height: 0;
+        gap: 2px;
+    }
+}

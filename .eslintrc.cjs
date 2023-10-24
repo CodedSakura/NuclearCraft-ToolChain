@@ -15,6 +15,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-namespace': 'ignore',
+    '@typescript-eslint/no-namespace': 'off',
   },
 }

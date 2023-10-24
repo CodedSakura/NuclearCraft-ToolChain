@@ -84,7 +84,7 @@ function DisplayOverhaulSFR({ design, imageSize, setImageSize, blur, configurati
               return <img 
                     key={z} 
                     src={"data:image/png;base64," + block.modules["plannerator:texture"]["texture"]}
-                    alt={block.name} 
+                    alt={block.modules["plannerator:display_name"].display_name} 
                     width={imageSize} 
                     height={imageSize} />
             })}
